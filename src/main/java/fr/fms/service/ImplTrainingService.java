@@ -21,7 +21,6 @@ public class ImplTrainingService implements ITrainingService{
     public Training saveTraining(Training t) {
         return trainingRepository.save(t);
     }
-
     @Override
     public void deleteTraining(Long id) {
         trainingRepository.deleteById(id);
