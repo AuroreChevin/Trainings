@@ -9,7 +9,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
@@ -23,10 +23,7 @@ public class TrainingControllerTest {
 
     @Test
     public void testGetTrainings() throws Exception{
-        mockMvc.perform(get("/api/trainings")).andExpect(status().isOk());
+        mockMvc.perform(get("/api/trainings")).andDo(print()).andExpect(status().isOk());
     }
-   /* @Test
-    public void testPostTrainings() throws Exception{
-        mockMvc.perform(get("/api/trainings/{id}")).andExpect(status().isOk());
-    }*/
+
 }

@@ -16,7 +16,7 @@ public class TrainingJpaTests {
     TrainingRepository trainingRepository;
     @Test
     void should_find_all_trainings(){
-        trainingRepository.save(new Training(null, "babar", "dessin animé", 0, 0));
+        trainingRepository.save(new Training(null, "babar", "personnage", 0, 0));
         Iterable<Training> trainings = trainingRepository.findAll();
         assertThat(trainings).isNotEmpty();
     }
