@@ -2,6 +2,7 @@ package fr.fms;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -27,8 +30,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        System.out.println("**************");
-        System.out.println(username);
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
         return authenticationManager.authenticate(authenticationToken);
     }
@@ -41,8 +42,17 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                     .withIssuer(request.getRequestURL().toString())
                     .withClaim("roles", springUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                     .sign(Algorithm.HMAC256(SecurityConstants.SECRET));
-            response.setHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + jwtToken);
-
+            //response.setHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + jwtToken);
+            String refreshToken = JWT.create()
+                    .withSubject(springUser.getUsername())
+                    .withExpiresAt(new Date(System.currentTimeMillis()+ SecurityConstants.EXPIRATION_TIME + SecurityConstants.EXPIRATION_TIME))
+                    .withIssuer(request.getRequestURL().toString())
+                    .sign(Algorithm.HMAC256(SecurityConstants.SECRET));
+            Map<String, String> allTokens = new HashMap<>();
+            allTokens.put("access-token", jwtToken);
+            allTokens.put("refresh-token",refreshToken);
+            response.setContentType("application/json");
+            new ObjectMapper().writeValue(response.getOutputStream(), allTokens);
     }
 
 }
