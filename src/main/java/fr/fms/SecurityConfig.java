@@ -22,6 +22,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
@@ -29,6 +31,7 @@ import java.util.Collection;
 
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     @Override
@@ -36,10 +39,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
     @Bean
-    CorsConfigurationSource corsConfigurationSource(){
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
-        return source;
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**").allowedOrigins("http://localhost:4200");
+            }
+        };
     }
     @Autowired
     private UserDetailsService userDetailsService;
@@ -52,9 +58,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception{
        // http.formLogin();
-        http.authorizeHttpRequests().antMatchers("/api/trainings").permitAll();
-        http.authorizeHttpRequests().anyRequest().authenticated();
-      //  http.authorizeRequests().antMatchers().hasAuthority("ADMIN");
+        http.authorizeRequests().antMatchers(HttpMethod.GET,"/api/trainings").permitAll();
+        //http.authorizeRequests().anyRequest().authenticated();
+        http.authorizeRequests().antMatchers(HttpMethod.DELETE,"/api/trainings/{id}").hasAuthority("ADMIN");
+        http.authorizeRequests().antMatchers(HttpMethod.POST,"/api/trainings").hasAuthority("ADMIN");
         http.csrf().disable();
         http.cors();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
