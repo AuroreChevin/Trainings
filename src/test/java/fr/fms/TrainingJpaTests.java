@@ -11,15 +11,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-//@DataJpaTest
+
+@DataJpaTest
 @AutoConfigureTestDatabase(replace= AutoConfigureTestDatabase.Replace.NONE)
 public class TrainingJpaTests {
     @Autowired
     TrainingRepository trainingRepository;
     @Test
     void should_find_all_trainings(){
-        trainingRepository.save(new Training(null, "babar", "personnage", 0, 0));
+        trainingRepository.save(new Training(null, "babar", "personnage", 0, 0, null, null));
         Iterable<Training> trainings = trainingRepository.findAll();
         assertThat(trainings).isNotEmpty();
     }

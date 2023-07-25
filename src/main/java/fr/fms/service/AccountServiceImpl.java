@@ -38,8 +38,11 @@ public class AccountServiceImpl implements AccountService{
     public void addRoleToUser(String username, String roleName) {
         AppRole role = appRoleRepository.findByRoleName(roleName);
         AppUser user = appUserRepository.findByUsername(username);
+        System.out.println(role);
+        System.out.println(user);
         user.getRoles().add(role);
-        log.info("Association d'un rôle à un utilisateaur");
+        System.out.println(user);
+        log.info("Association d'un rôle à un utilisateur");
     }
 
     @Override
@@ -51,4 +54,10 @@ public class AccountServiceImpl implements AccountService{
     public ResponseEntity<List<AppUser>> listUsers() {
         return ResponseEntity.ok().body(appUserRepository.findAll());
     }
+
+    @Override
+    public ResponseEntity<List<AppRole>> listRoles() {
+        return ResponseEntity.ok().body(appRoleRepository.findAll());
+    }
+
 }

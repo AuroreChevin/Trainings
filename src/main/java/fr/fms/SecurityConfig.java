@@ -58,10 +58,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception{
        // http.formLogin();
-        http.authorizeRequests().antMatchers(HttpMethod.GET,"/api/trainings").permitAll();
-        //http.authorizeRequests().anyRequest().authenticated();
-        http.authorizeRequests().antMatchers(HttpMethod.DELETE,"/api/trainings/{id}").hasAuthority("ADMIN");
+        http.authorizeRequests().antMatchers("/api/trainings").permitAll();
+        /*http.authorizeRequests().antMatchers(HttpMethod.DELETE,"/api/trainings/{id}").hasAuthority("ADMIN");
         http.authorizeRequests().antMatchers(HttpMethod.POST,"/api/trainings").hasAuthority("ADMIN");
+        http.authorizeRequests().antMatchers(HttpMethod.POST,"/api/users").hasAuthority("ADMIN");
+       http.authorizeRequests().antMatchers(HttpMethod.GET,"/api/users").hasAuthority("ADMIN");*/
+        //http.authorizeRequests().anyRequest().authenticated();
         http.csrf().disable();
         http.cors();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

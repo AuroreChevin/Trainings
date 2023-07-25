@@ -36,14 +36,15 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException{
             User springUser = (User) authResult.getPrincipal();
+            System.out.println("test" + springUser);
             String jwtToken = JWT.create()
                     .withSubject(springUser.getUsername())
                     .withExpiresAt(new Date(System.currentTimeMillis()+ SecurityConstants.EXPIRATION_TIME))
                     .withIssuer(request.getRequestURL().toString())
                     .withClaim("roles", springUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                     .sign(Algorithm.HMAC256(SecurityConstants.SECRET));
-            //response.setHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + jwtToken);
-            String refreshToken = JWT.create()
+            response.setHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + jwtToken);
+           /* String refreshToken = JWT.create()
                     .withSubject(springUser.getUsername())
                     .withExpiresAt(new Date(System.currentTimeMillis()+ SecurityConstants.EXPIRATION_TIME + SecurityConstants.EXPIRATION_TIME))
                     .withIssuer(request.getRequestURL().toString())
@@ -52,7 +53,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             allTokens.put("access-token", jwtToken);
             allTokens.put("refresh-token",refreshToken);
             response.setContentType("application/json");
-            new ObjectMapper().writeValue(response.getOutputStream(), allTokens);
+            new ObjectMapper().writeValue(response.getOutputStream(), allTokens);*/
     }
 
 }

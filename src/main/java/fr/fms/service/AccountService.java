@@ -12,4 +12,6 @@ public interface AccountService {
     public void addRoleToUser(String username, String roleName);
     public AppUser findUserByUsername(String username);
     ResponseEntity<List<AppUser>> listUsers();
+
+    ResponseEntity<List<AppRole>> listRoles();
 }

@@ -24,12 +24,17 @@ public class AccountRestController {
     public AppUser postUser(@RequestBody AppUser user){
         return this.accountService.saveUser(user);
     }
+    @GetMapping("/roles")
+    ResponseEntity<List<AppRole>> getRole(){
+        return this.accountService.listRoles();
+    }
     @PostMapping("/role")
     public AppRole postRole(@RequestBody AppRole role){
         return this.accountService.saveRole(role);
     }
     @PostMapping("/roleUser")
     public void postRoleToUser(@RequestBody UserRoleForm userRoleForm){
+        System.out.println(userRoleForm.getRoleName());
         accountService.addRoleToUser(userRoleForm.getUsername(), userRoleForm.getRoleName());
     }
 }
