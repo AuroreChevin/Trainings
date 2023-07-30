@@ -5,7 +5,6 @@ import fr.fms.exceptions.RecordNotFoundException;
 import fr.fms.service.ImplTrainingService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -15,14 +14,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api")
@@ -30,6 +27,7 @@ import java.util.Optional;
 public class TrainingController {
     @Autowired
     private ImplTrainingService implTrainingService;
+
     @GetMapping("/trainings")
     public ResponseEntity<List<Training>> getAllTrainings(){
         List<Training> trainings = implTrainingService.getAllTrainings();
@@ -86,13 +84,15 @@ public class TrainingController {
     }
     @PostMapping(path="/photo/{id}")
     public ResponseEntity<?> uploadPhoto(MultipartFile file, @PathVariable Long id) throws IOException{
-        try{
+        try {
             Training training = implTrainingService.readTraining(id).get();
             training.setPhoto(file.getOriginalFilename());
-            Files.write(Paths.get(System.getProperty("user.home")+"/trainings/images/"+training.getPhoto()), file.getBytes());
-        }catch (Exception e){
-            log.error("Problème lors de l'upload de l'image  correspondant à la formation d'id : {}", id);
-            return  ResponseEntity.internalServerError().body(e.getCause());
+            Files.write(Paths.get(System.getProperty("user.home")+"/trainings/images/" + training.getPhoto()),file.getBytes());
+            implTrainingService.saveTraining(training);
+        }
+        catch(Exception e) {
+            log.error("pb avec upload de l'image correspondant à la formation d'id : {}",id);
+            return ResponseEntity.internalServerError().body(e.getCause());
         }
         log.info("file upload ok {}",id);
         return ResponseEntity.ok().build();

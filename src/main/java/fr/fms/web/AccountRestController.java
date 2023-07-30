@@ -21,8 +21,7 @@ public class AccountRestController {
         return this.accountService.listUsers();
     }
     @PostMapping("/users")
-    public AppUser postUser(@RequestBody AppUser user){
-        return this.accountService.saveUser(user);
+    public AppUser postUser(@RequestBody AppUser user){return this.accountService.saveUser(user);
     }
     @GetMapping("/roles")
     ResponseEntity<List<AppRole>> getRole(){
@@ -34,7 +33,6 @@ public class AccountRestController {
     }
     @PostMapping("/roleUser")
     public void postRoleToUser(@RequestBody UserRoleForm userRoleForm){
-        System.out.println(userRoleForm.getRoleName());
         accountService.addRoleToUser(userRoleForm.getUsername(), userRoleForm.getRoleName());
     }
 }

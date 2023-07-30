@@ -1,7 +1,6 @@
 package fr.fms.web;
 
 import fr.fms.entities.Category;
-import fr.fms.entities.Training;
 import fr.fms.exceptions.RecordNotFoundException;
 import fr.fms.service.ImplTrainingService;
 import lombok.extern.slf4j.Slf4j;

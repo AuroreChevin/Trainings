@@ -51,7 +51,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 for (String role : roles) {authorities.add(new SimpleGrantedAuthority(role));System.out.println(role);}
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, null, authorities);
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-                //response.addHeader("Access-Control-Allow-Origin","*");
             }
             catch(Exception e) {
                 response.setHeader(SecurityConstants.ERROR_MSG, e.getMessage());

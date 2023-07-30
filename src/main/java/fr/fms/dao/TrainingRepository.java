@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+
 public interface TrainingRepository extends JpaRepository <Training, Long>{
 
     List<Training> findByCategoryId(Long id);

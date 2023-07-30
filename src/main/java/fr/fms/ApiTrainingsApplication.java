@@ -60,8 +60,8 @@ public class ApiTrainingsApplication implements CommandLineRunner {
 		trainingRepository.save(new Training(null,"Magento","Formation Magento 4 jours",1300,1,"unknown.png",cms));
 	}
 	private void generateUserRoles(){
-		accountService.saveUser(new AppUser(null, "rory", "12345", new ArrayList<>(), new ArrayList<>()));
-		accountService.saveUser(new AppUser(null, "ladyhead", "12345", new ArrayList<>(), new ArrayList<>()));
+		accountService.saveUser(new AppUser(null, "rory", "12345", new ArrayList<>()));
+		accountService.saveUser(new AppUser(null, "ladyhead", "12345", new ArrayList<>()));
 		accountService.saveRole(new AppRole(null, "ADMIN"));
 		accountService.saveRole(new AppRole(null, "USER"));
 		accountService.addRoleToUser("rory", "ADMIN");

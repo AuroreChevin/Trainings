@@ -23,6 +23,4 @@ public class AppUser {
     private String password;
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<AppRole> roles = new ArrayList<>();
-    @ManyToMany
-    private Collection<Training> trainings = new ArrayList<>();
 }

@@ -19,13 +19,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import javax.sql.DataSource;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -58,20 +55,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception{
        // http.formLogin();
-        http.authorizeRequests().antMatchers("/api/trainings").permitAll();
-        /*http.authorizeRequests().antMatchers(HttpMethod.DELETE,"/api/trainings/{id}").hasAuthority("ADMIN");
-        http.authorizeRequests().antMatchers(HttpMethod.POST,"/api/trainings").hasAuthority("ADMIN");
+        http.authorizeRequests().antMatchers(HttpMethod.GET,"/api/trainings/**","/api/categories/**").permitAll();
+        http.authorizeRequests().antMatchers(HttpMethod.POST,"/login/**").permitAll();
+        http.authorizeRequests().antMatchers(HttpMethod.GET,"/api/photo/**").permitAll();
+        http.authorizeRequests().antMatchers(HttpMethod.POST,"/api/photo/**").hasAuthority("ADMIN");
+        http.authorizeRequests().antMatchers(HttpMethod.DELETE,"/api/trainings/**").hasAuthority("ADMIN");
+        http.authorizeRequests().antMatchers(HttpMethod.POST,"/api/trainings/**").hasAuthority("ADMIN");
+
         http.authorizeRequests().antMatchers(HttpMethod.POST,"/api/users").hasAuthority("ADMIN");
-       http.authorizeRequests().antMatchers(HttpMethod.GET,"/api/users").hasAuthority("ADMIN");*/
-        //http.authorizeRequests().anyRequest().authenticated();
+        http.authorizeRequests().antMatchers(HttpMethod.GET,"/api/users").permitAll();
+        http.authorizeRequests().antMatchers(HttpMethod.POST,"/api/role").permitAll();
+        http.authorizeRequests().antMatchers(HttpMethod.GET,"/api/roles").permitAll();
+                //hasAuthority("ADMIN");
+        http.authorizeRequests().antMatchers(HttpMethod.POST,"/api/roleUser").permitAll();
+        http.authorizeRequests().anyRequest().authenticated();
         http.csrf().disable();
         http.cors();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilter(new JwtAuthenticationFilter(authenticationManagerBean()));
         http.addFilterBefore(new JwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
-    //@Autowired (required = true)
-    //DataSource dataSource;
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService((new UserDetailsService() {
@@ -85,14 +88,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 return new User(user.getUsername(), user.getPassword(), authorities);
             }
         }));}
-       /* auth.jdbcAuthentication().dataSource(dataSource)
-                .usersByUsernameQuery("select username as principal, password as credentials, active from T_Users where username=?")
-                .authoritiesByUsernameQuery("select username as principal, role as role from T_Users_Roles where username=?")
-                .rolePrefix("ROLE_")
-                .passwordEncoder(passwordEncoder());*/
-
-   /* @Bean
-    PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }*/
 }
